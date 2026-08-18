@@ -156,6 +156,10 @@ No business logic lives in these endpoints.
 
 ## 11. Create a new module
 
+> 🎓 New to Go and want to learn by doing? Read the fun, beginner-friendly guide
+> **`docs/LEARN_AUTH_FA.md`** (in Persian) and build your first Sign Up / Login
+> module step by step, like you're five. 🐱
+
 For a new feature, e.g. `payment`, create `internal/modules/payment/`:
 
 ```
@@ -175,9 +179,9 @@ internal/modules/payment/
 3. Implement business rules in `service.go` (inject dependencies via the
    constructor; no Fiber/DB/OTel specifics).
 4. Implement the HTTP layer in `handler.go` (the only place using Fiber).
-5. Add a concrete repository adapter (e.g. in `internal/app/payment_repo.go`)
+5. Add a concrete repository adapter (e.g. `internal/modules/payment/repository_pg.go`)
    that implements the interface against PostgreSQL.
-6. Wire it in `internal/app/modules.go` (`newModules`) and mount routes in
+6. Wire it in `internal/app/deps.go` (`newModules`) and mount routes in
    `internal/app/routes.go`.
 7. Add Swagger annotations and run `make swagger`.
 8. Add unit tests next to `service.go` and `handler.go`.
