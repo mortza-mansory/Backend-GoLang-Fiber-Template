@@ -15,6 +15,7 @@ import (
 	"github.com/yourorg/go-fiber-template/internal/infra/sms"
 	"github.com/yourorg/go-fiber-template/internal/infra/storage"
 	"github.com/yourorg/go-fiber-template/internal/infra/token"
+	"github.com/yourorg/go-fiber-template/internal/modules/auth"
 	"github.com/yourorg/go-fiber-template/internal/server"
 )
 
@@ -113,5 +114,29 @@ func (d *Deps) Close(ctx context.Context) {
 	}
 	if d.Observability != nil {
 		_ = d.Observability.Close(ctx)
+	}
+}
+
+// AuthModule holds the auth module's dependencies as wired at startup.
+type AuthModule struct {
+	Handler *auth.Handler
+}
+
+// Modules aggregates all registered feature modules.
+type Modules struct {
+	Auth *AuthModule
+}
+
+// newModules constructs every feature module.
+//
+// TODO: add new features here, e.g.:
+//
+//	modules.Payment = &PaymentModule{ Handler: payment.NewHandler(...) }
+func newModules(d *Deps) *Modules {
+	authService := auth.NewService(auth.NewPostgresRepository(d.DB), d.Logger)
+	authHandler := auth.NewHandler(authService, d.Validator)
+
+	return &Modules{
+		Auth: &AuthModule{Handler: authHandler},
 	}
 }
