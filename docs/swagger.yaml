@@ -1,0 +1,130 @@
+basePath: /api
+definitions:
+  auth.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  server.ErrorDetail:
+    properties:
+      code:
+        $ref: '#/definitions/shared.ErrorCode'
+      message:
+        type: string
+    type: object
+  server.ErrorEnvelope:
+    properties:
+      error:
+        $ref: '#/definitions/server.ErrorDetail'
+      success:
+        type: boolean
+    type: object
+  server.SuccessEnvelope:
+    properties:
+      data: {}
+      meta: {}
+      success:
+        type: boolean
+    type: object
+  shared.ErrorCode:
+    enum:
+    - BAD_REQUEST
+    - UNAUTHORIZED
+    - FORBIDDEN
+    - NOT_FOUND
+    - CONFLICT
+    - UNPROCESSABLE_ENTITY
+    - INTERNAL_ERROR
+    - TOO_MANY_REQUESTS
+    type: string
+    x-enum-varnames:
+    - CodeBadRequest
+    - CodeUnauthorized
+    - CodeForbidden
+    - CodeNotFound
+    - CodeConflict
+    - CodeUnprocessable
+    - CodeInternal
+    - CodeTooManyRequests
+host: localhost:8080
+info:
+  contact: {}
+  description: Production-ready Go + Fiber modular monolith template.
+  title: Go Fiber Template API
+  version: 0.1.0
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return tokens.
+      parameters:
+      - description: Credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.SuccessEnvelope'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/server.ErrorEnvelope'
+      summary: Login
+      tags:
+      - auth
+  /auth/ping:
+    get:
+      description: Verify auth module dependencies are reachable.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.SuccessEnvelope'
+      summary: Auth ping
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account.
+      parameters:
+      - description: Account details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server.SuccessEnvelope'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/server.ErrorEnvelope'
+      summary: Register
+      tags:
+      - auth
+swagger: "2.0"

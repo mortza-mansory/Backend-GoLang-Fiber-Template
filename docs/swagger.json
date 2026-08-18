@@ -1,0 +1,192 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Production-ready Go + Fiber modular monolith template.",
+        "title": "Go Fiber Template API",
+        "contact": {},
+        "version": "0.1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Authenticate a user and return tokens.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Credentials",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.SuccessEnvelope"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorEnvelope"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/ping": {
+            "get": {
+                "description": "Verify auth module dependencies are reachable.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Auth ping",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.SuccessEnvelope"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Create a new user account.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "parameters": [
+                    {
+                        "description": "Account details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/server.SuccessEnvelope"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorEnvelope"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "auth.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.RegisterRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.ErrorDetail": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "$ref": "#/definitions/shared.ErrorCode"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.ErrorEnvelope": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/server.ErrorDetail"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "server.SuccessEnvelope": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "meta": {},
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "shared.ErrorCode": {
+            "type": "string",
+            "enum": [
+                "BAD_REQUEST",
+                "UNAUTHORIZED",
+                "FORBIDDEN",
+                "NOT_FOUND",
+                "CONFLICT",
+                "UNPROCESSABLE_ENTITY",
+                "INTERNAL_ERROR",
+                "TOO_MANY_REQUESTS"
+            ],
+            "x-enum-varnames": [
+                "CodeBadRequest",
+                "CodeUnauthorized",
+                "CodeForbidden",
+                "CodeNotFound",
+                "CodeConflict",
+                "CodeUnprocessable",
+                "CodeInternal",
+                "CodeTooManyRequests"
+            ]
+        }
+    }
+}
